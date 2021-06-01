@@ -35,15 +35,17 @@ class _MyHomePageState extends State<MyHomePage> {
   String rawText = '';
   bool isDone = false;
   int currentPage = 0;
+  double fontSize = 26.0;
 
   void _incrementCounter() async {
     rawText = await rootBundle.loadString('assets/Lorem ipsum.txt');
     double height = MediaQueryData.fromWindow(window).size.height;
-    double padding = MediaQueryData.fromWindow(window).padding.top + MediaQueryData.fromWindow(window).padding.bottom;
+    double padding = MediaQueryData.fromWindow(window).padding.top +
+        MediaQueryData.fromWindow(window).padding.bottom + 204.0;
     height -= padding;
     double width = MediaQueryData.fromWindow(window).size.width;
     setState(() {
-      isDone = Pagination.setPage(rawText, height, width, 'Roboto', 26.0, 3.0, 1.5);
+      isDone = Pagination.setPage(rawText, height, width, 'Roboto', fontSize, 3.0, 1.5);
     });
   }
 
@@ -53,13 +55,54 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: isDone
-            ? Text(
-                Pagination.pageText(currentPage),
-                style: TextStyle(fontSize: 26, letterSpacing: 3.0, height: 1.5),
-              )
-            : Text('Loading...'),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: isDone
+                  ? Text(
+                      Pagination.pageText(currentPage),
+                      style: TextStyle(
+                          fontSize: fontSize, letterSpacing: 3.0, height: 1.5),
+                    )
+                  : Text(
+                      'Loading...',
+                      style: TextStyle(
+                          fontSize: fontSize, letterSpacing: 3.0, height: 1.5),
+                    ),
+            ),
+          ),
+          BottomAppBar(
+            child: Row(
+              children: [
+                IconButton(
+                    icon: Icon(
+                      Icons.font_download,
+                      size: 24,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isDone = false;
+                        fontSize = 26.0;
+                        isDone = Pagination.setStyle('Roboto', fontSize, 3.0, 1.5);
+                      });
+                    }),
+                IconButton(
+                    icon: Icon(
+                      Icons.font_download,
+                      size: 32,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isDone = false;
+                        fontSize = 32.0;
+                        isDone = Pagination.setStyle('Roboto', fontSize, 3.0, 1.5);
+                      });
+                    }),
+              ],
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.grey,

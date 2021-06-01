@@ -7,10 +7,12 @@ class Pagination {
   static String _rawText = '';
   static List<num> _textIdx = [];
 
-  static String fontName = 'Roboto';
-  static double fontSize = 26.0;
-  static double letterSpacig = 3.0;
-  static double height = 1.5;
+  static double _pageHeight = MediaQueryData.fromWindow(window).size.height;
+  static double _pageWidth = MediaQueryData.fromWindow(window).size.width;
+  static String _fontName = 'Roboto';
+  static double _fontSize = 26.0;
+  static double _letterSpacig = 3.0;
+  static double _height = 1.5;
 
   static int pageLength()  {
     return _textIdx.length;
@@ -22,15 +24,21 @@ class Pagination {
     return _rawText.substring(start, end);
   }
 
-  static bool setPage(String text, double pageHeight, double pageWidth,
+  static bool setStyle(String font, double fSize, double lSpacing, double fHeight) {
+    return setPage(_rawText, _pageHeight, _pageWidth, font, fSize, lSpacing, fHeight);
+  }
+
+  static bool setPage(String text, double pgHeight, double pgWidth,
       String font, double fSize, double lSpacing, double fHeight) {
     _rawText = text;
     _textIdx.clear();
 
-    fontName = font;
-    fontSize = fSize;
-    letterSpacig = lSpacing;
-    height = fHeight;
+    _pageHeight = pgHeight;
+    _pageWidth = pgWidth;
+    _fontName = font;
+    _fontSize = fSize;
+    _letterSpacig = lSpacing;
+    _height = fHeight;
 
     TextPainter textPainter = TextPainter(
         textDirection: TextDirection.ltr,
@@ -39,18 +47,17 @@ class Pagination {
     textPainter.text = TextSpan(
       text: '가',
       style: TextStyle(
-          locale: Locale('en_EN'),
-          fontFamily: fontName,
-          fontSize: fontSize,
-          letterSpacing: letterSpacig,
-          height: height),
+          fontFamily: font,
+          fontSize: fSize,
+          letterSpacing: lSpacing,
+          height: fHeight),
     );
 
-    textPainter.layout(maxWidth: pageWidth);
+    textPainter.layout(maxWidth: pgWidth);
     double lineHeight = textPainter.preferredLineHeight;
     double charWidth = textPainter.width;
-    int lineNumberPerPage = (pageHeight ~/ lineHeight) - 1;
-    int charNumberPerLine = (pageWidth ~/ charWidth) - 1;
+    int lineNumberPerPage = (pgHeight ~/ lineHeight) - 1;
+    int charNumberPerLine = (pgWidth ~/ charWidth) - 1;
     _getPageOffsets(text, lineNumberPerPage, charNumberPerLine).listen((value) {
       _textIdx.add(value);
     });
@@ -70,7 +77,7 @@ class Pagination {
           yield i;
         }
 
-        if (text[i].contains(new RegExp(r'[A-Za-z ]'))) {
+        if (text[i].contains(new RegExp(r'[A-Za-z0-9 ,.<>/?!@#$%^&*()-_=+\\|]'))) {
           lineText += 0.5;
         } else
           lineText += 1;
