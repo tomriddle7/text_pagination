@@ -1,8 +1,7 @@
 name: text_pagination
-description: A new Flutter package project.
-version: 0.0.1
-author:
-homepage:
+description: Fast long text paginator
+version: 1.0.0
+homepage: https://github.com/tomriddle7/text_pagination
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
