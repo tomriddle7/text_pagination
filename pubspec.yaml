@@ -1,6 +1,6 @@
 name: text_pagination
 description: Fast long text paginator
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/tomriddle7/text_pagination
 
 environment:
